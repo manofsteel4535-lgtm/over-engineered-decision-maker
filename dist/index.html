@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0e17">
+  <meta name="description" content="10,000 simulations. Four existential variables. One unnecessarily serious decision. A mission-control dashboard for your everyday choices.">
+  <title>The Over-Engineered Decision Maker</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0e17'/%3E%3Cpath d='M16 5v9M16 14L6 25M16 14l10 11' stroke='%235ae6dc' stroke-width='2'/%3E%3Cg fill='%235ae6dc'%3E%3Ccircle cx='16' cy='6' r='3'/%3E%3Ccircle cx='6' cy='25' r='3'/%3E%3Ccircle cx='26' cy='25' r='3'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./tailwind.css">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+  <script src="./vendor/chart.umd.js" defer></script>
+  <script src="./vendor/lucide.min.js" defer></script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar flex items-center justify-between">
+      <div class="brand flex items-center gap-3"><span class="brand-icon"><i data-lucide="git-fork"></i></span><span>ODDM<span class="brand-divider">/</span><span class="brand-sub">DECISION SYSTEMS</span></span></div>
+      <div class="top-meta flex items-center gap-6"><span><span class="status-dot"></span> ALL SYSTEMS NOMINAL</span><span id="clock">--:--:-- UTC</span><span class="version">V. 4.0.2</span></div>
+    </header>
+    <main>
+      <div class="page-heading flex items-center justify-between gap-5">
+        <div><div class="eyebrow">ORDINARY CHOICES. EXTRAORDINARY COMPUTATION.</div><h1>The Over-Engineered<br class="mobile-break"> Decision Maker<span class="title-dot">.</span></h1><p>Because “just pick one” is not an acceptable methodology.</p></div>
+        <div class="mission-id"><span class="micro">ACTIVE MISSION</span><strong id="mission-id">DEC-0001</strong><span class="micro">PRIORITY: UNNECESSARILY HIGH</span></div>
+      </div>
+      <div class="system-strip grid grid-cols-2 md:grid-cols-4">
+        <div><i data-lucide="cpu"></i><span>ENGINE STATUS<strong id="engine-status">STANDBY</strong></span><span class="strip-end cyan">●</span></div>
+        <div><i data-lucide="layers"></i><span>SCENARIOS PER RUN<strong>10,000<span class="unit"> iterations</span></strong></span></div>
+        <div><i data-lucide="activity"></i><span>DECISION COMPLEXITY<strong id="complexity">ABSURD<span class="unit"> / 42×</span></strong></span></div>
+        <div><i data-lucide="shield-alert"></i><span>EXISTENTIAL THREAT<strong class="amber" id="threat-level">ELEVATED</strong></span></div>
+      </div>
+      <div class="dashboard">
+        <aside class="panel parameters">
+          <div class="panel-heading"><h2><span class="panel-no">01</span> Mission parameters</h2><i data-lucide="sliders-horizontal"></i></div>
+          <form id="mission-form">
+            <div class="field"><label for="option-a"><span class="option-dot a"></span> OPTION A</label><input id="option-a" name="option-a" value="Tacos" maxlength="60" required autocomplete="off"></div>
+            <div class="versus"><span></span>VS<span></span></div>
+            <div class="field"><label for="option-b"><span class="option-dot b"></span> OPTION B</label><input id="option-b" name="option-b" value="Salad" maxlength="60" required autocomplete="off"></div>
+            <div class="field context-field"><label for="context">CONTEXTUAL VARIABLE</label><select id="context"><option>Workplace Lunch</option><option>Late Night Craving</option><option>First Date</option></select></div>
+            <div class="chaos-label flex items-center justify-between"><label for="chaos">CHAOS MULTIPLIER</label><output id="chaos-output" for="chaos">42<span> / 100</span></output></div>
+            <input type="range" id="chaos" min="1" max="100" value="42"><div class="range-label flex justify-between"><span>Predictable</span><span>Apocalyptic</span></div>
+            <div class="chaos-warning"><i data-lucide="triangle-alert"></i><p id="chaos-description">Moderate chaos. Your lunch may alter the timeline.</p></div>
+            <button id="run-button" type="submit" class="run-button"><i data-lucide="zap"></i><span>RUN QUANTUM<br>DECISION MATRIX</span></button>
+            <div class="run-caption" id="run-caption">10,000 scenarios. Zero chill.</div>
+            <div class="settings">
+              <label class="toggle-row" for="mute"><span><i data-lucide="volume-2"></i> Mute audio</span><input type="checkbox" id="mute" role="switch"><span class="switch" aria-hidden="true"></span></label>
+              <label class="toggle-row" for="performance"><span><i data-lucide="gauge"></i> High-performance mode</span><input type="checkbox" id="performance" role="switch"><span class="switch" aria-hidden="true"></span></label>
+              <p>Fewer particles. Same existential dread.</p>
+            </div>
+          </form>
+          <div class="parameter-footer"><i data-lucide="lock-keyhole"></i> CLASSIFIED: EXTREMELY MUNDANE</div>
+        </aside>
+        <section class="panel topology-panel">
+          <div class="panel-heading"><h2><span class="panel-no">02</span> 3D spatial topology</h2><span class="live-badge">LIVE MODEL</span></div>
+          <div class="topology-toolbar flex justify-between items-center"><span><span class="cyan">◈</span> USER CHOICE INSTANCE</span><div class="flex gap-2"><button id="rotate" class="icon-button" aria-label="Pause graph rotation" title="Pause rotation"><i data-lucide="pause"></i></button><button id="reset-view" class="icon-button" aria-label="Reset graph view" title="Reset view"><i data-lucide="scan"></i></button></div></div>
+          <div id="topology" role="img" aria-label="Interactive 3D graph of nutritional entropy, post-lunch lethargy, financial friction, and existential satisfaction. Drag to rotate; scroll to zoom."><div id="node-labels"></div><div id="node-tooltip" role="tooltip" hidden></div><div class="graph-crosshair tl"></div><div class="graph-crosshair tr"></div><div class="graph-crosshair bl"></div><div class="graph-crosshair br"></div><div class="graph-coordinates">X <span id="coordinate-x">+00.00</span><br>Y +01.20<br>Z +08.00</div></div>
+          <div class="graph-footer flex items-center justify-between"><span><i data-lucide="mouse-pointer-2"></i> DRAG TO ORBIT · SCROLL TO ZOOM</span><span>5 NODES <span class="separator">/</span> 4 VECTORS</span></div>
+          <div class="topology-metrics grid grid-cols-3"><div><span>ENTROPY INDEX</span><strong id="entropy">0.842<span> H</span></strong></div><div><span>COHERENCE</span><strong id="coherence">97.6<span> %</span></strong></div><div><span>REALITY INTEGRITY</span><strong class="cyan" id="integrity">STABLE</strong></div></div>
+        </section>
+        <div class="analytics">
+          <section class="panel probability-panel">
+            <div class="panel-heading"><h2><span class="panel-no">03</span> Monte Carlo engine</h2><i data-lucide="chart-no-axes-combined"></i></div>
+            <div class="chart-topline flex items-center justify-between"><span>OUTCOME DISTRIBUTION</span><div class="legend"><span><b class="a"></b><span id="legend-a">Tacos</span></span><span><b class="b"></b><span id="legend-b">Salad</span></span></div></div>
+            <div class="chart-wrap"><canvas id="probability-chart" role="img" aria-label="Comparison of simulated utility distributions for both options"></canvas></div>
+            <div class="distribution-footer"><span>UTILITY SCORE →</span><span id="sample-status">AWAITING SIMULATION</span></div>
+            <div class="probability-stats grid grid-cols-3"><div><span>MEAN <b class="cyan">A</b> / <b class="amber">B</b></span><strong id="means">— / —</strong></div><div><span>STD. DEVIATION</span><strong id="deviations">— / —</strong></div><div><span>TAIL RISK &lt; 25</span><strong id="tails">— / —</strong></div></div>
+          </section>
+          <section class="panel risk-panel">
+            <div class="panel-heading"><h2><span class="panel-no">04</span> Weighted risk matrix</h2><span class="risk-badge" id="risk-count">5 POTENTIAL THREATS</span></div>
+            <div class="risk-content"><div class="risk-y-label">CONSEQUENCE SEVERITY</div><div class="risk-y-ticks"><span>Devastating</span><span>Inconvenient</span><span>Mild</span></div><div class="heatmap" id="heatmap"><div class="heat-cells" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div id="risk-points"></div></div><div class="risk-x-ticks"><span>Low</span><span>Moderate</span><span>High</span></div><div class="risk-x-label">LIKELIHOOD OF ABSOLUTE NONSENSE</div></div>
+            <div class="risk-bottom"><span><i data-lucide="info"></i> Hover or tap a threat to inspect</span><span class="heat-legend">LOW <b></b> HIGH</span></div>
+            <div id="risk-detail" class="risk-detail" aria-live="polite">Salsa stains are a non-zero possibility.</div>
+          </section>
+        </div>
+        <section class="panel executive">
+          <div class="panel-heading"><h2><span class="panel-no">05</span> Executive directive</h2><span id="directive-status" class="micro">AWAITING ORDERS</span></div>
+          <div class="executive-body"><div class="directive-icon"><i data-lucide="crosshair"></i></div><div class="directive-copy"><div class="micro cyan" id="recommendation-label">RECOMMENDED ACTION</div><h3 id="winner">The fate of lunch<br>is in your hands.</h3><p id="confidence" aria-live="polite">Initialize the matrix to receive your directive.</p></div></div>
+          <div class="regret"><div class="flex justify-between"><span>POST-DECISION REGRET INDEX</span><strong id="regret-value">—</strong></div><div class="progress-track"><div id="regret-bar"></div></div></div>
+        </section>
+        <section class="panel telemetry">
+          <div class="panel-heading"><h2><span class="panel-no">06</span> Telemetry log</h2><span class="micro"><span class="status-dot"></span> CONSOLE ACTIVE</span></div>
+          <div id="logs" role="log" aria-label="Simulation telemetry" aria-live="polite" aria-relevant="additions"></div>
+          <div class="console-bottom"><span class="prompt-symbol">›</span><span id="console-state">Awaiting your wildly consequential input<span class="cursor">_</span></span><span class="micro" id="log-count">03 EVENTS</span></div>
+        </section>
+      </div>
+      <footer class="site-footer flex justify-between gap-4"><span><i data-lucide="orbit"></i> OVER-ENGINEERING DEPARTMENT <span class="separator">/</span> EST. FIVE MINUTES AGO</span><span>Simulated probabilities. Real indecision. <span class="cyan">No actual quantum computers were harmed.</span></span></footer>
+    </main>
+  </div>
+</body>
+</html>
