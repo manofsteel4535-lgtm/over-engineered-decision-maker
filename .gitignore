@@ -1,6 +1,7 @@
 node_modules/
 .sites-runtime/
 .openai/
+.vercel/
 
 # dist/ is this buildless app's source and vendored runtime: keep it tracked.
 # Ignore only disposable build outputs.

@@ -14,6 +14,20 @@ Open http://127.0.0.1:4173. Serve the `dist` folder with any static web server f
 
 The `dist/` directory contains the maintained application source and vendored browser libraries, so it is intentionally versioned. Dependencies, disposable build folders, environment files, logs and local hosting/editor metadata are excluded by `.gitignore`.
 
+## Production deployment (Vercel)
+
+The Git repository root is the app directory containing this `package.json` and `vercel.json`. Keep Vercel's Root Directory empty, select the Other framework preset, and deploy `main`. The versioned configuration explicitly uses `npm ci`, `npm run build`, and the `dist` output directory. This is a static browser app; `server.mjs` is only the local preview server.
+
+```sh
+npm ci
+npm run build
+npm test
+```
+
+The build checks JavaScript syntax, regenerates Tailwind CSS, and verifies the entry point and every local HTML/ES-module dependency. It preserves the maintained `dist` source. Extensionless paths fall back to `index.html`, while real assets retain their correct MIME types and missing asset files return 404 rather than HTML. The HTML base URL ensures nested paths load scripts, styles, and the Three.js import map from the site root. Unversioned assets revalidate on reload instead of receiving immutable caching.
+
+Only navigation, optical/timezone preferences, and archive history persist. Live inputs and simulation/combat/trial state remain empty after reload, including on nested SPA paths.
+
 ## Features
 
 - Three.js 3D topology with OrbitControls, projected labels, node hover metrics, view reset, and rotation pause.
