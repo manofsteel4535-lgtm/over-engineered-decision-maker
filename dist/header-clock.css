@@ -1,0 +1,6 @@
+/* Plain inline clock: only the timezone abbreviation is clickable. */
+#clock{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.timestamp-digits{min-width:8ch}
+.tz-badge{width:3ch;flex:none;padding:0;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;cursor:pointer;box-shadow:none;transition:none!important;animation:none!important;transform:none!important}
+.tz-badge:focus-visible{outline:1px dashed currentColor;outline-offset:3px}
+@media(max-width:800px){.header-controls .top-meta{display:flex}.header-controls{flex-wrap:wrap;justify-content:flex-end;gap:8px}}

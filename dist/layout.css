@@ -1,0 +1,91 @@
+/* Shared grid row and stretched flex columns; document scrolling stays natural. */
+.dashboard{grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:auto;gap:16px;align-items:stretch}
+.dashboard>.parameters{grid-row:auto;grid-column:span 3;min-width:0;align-self:stretch}
+.dashboard>.command-center{grid-column:span 5;min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;gap:16px}
+.dashboard>.analytics{grid-column:span 4;min-width:0;display:flex;flex-direction:column;gap:16px}
+.command-center>.executive,.command-center>.topology-panel,.analytics>.telemetry{grid-column:auto;grid-row:auto}
+.command-center>.executive{flex:none}
+.command-center>.topology-panel{flex:1 1 0;display:flex;flex-direction:column;min-height:420px}
+.command-center>.topology-panel #topology{flex:1 1 0;min-height:0;width:100%;height:100%;position:relative}
+.command-center>.topology-panel>.panel-heading,.command-center>.topology-panel>.topology-toolbar,
+.command-center>.topology-panel>.graph-footer,.command-center>.topology-panel>.topology-metrics{flex:none}
+.analytics>.telemetry{flex:1 1 auto}
+.analytics>.telemetry #logs{height:155px;flex:1 1 155px;min-height:155px}
+.analytics>.telemetry .console-bottom{flex:none;flex-wrap:wrap;align-items:baseline;font-size:9px}
+.analytics>.telemetry #console-state{flex:1;min-width:0}
+
+/* Command Center Verdict: purposeful tint and framing in each optical mode. */
+:root{
+  --verdict-bg:#f0f9ff;--verdict-border:#0284c7;--verdict-frame:#0f172a;--verdict-label:#0c4a6e;
+  --verdict-winner:#0f172a;--verdict-text:#334155;--verdict-badge-bg:#bae6fd;--verdict-badge-text:#082f49;
+  --verdict-badge-border:#38bdf8;--verdict-track:#e2e8f0;--verdict-fill:linear-gradient(90deg,#d97706,#0284c7 65%);
+  --verdict-shadow:0 3px 6px #0284c70a,0 12px 28px -18px #0284c74d;
+}
+html.dark{
+  --verdict-bg:#0c1929;--verdict-border:#06b6d480;--verdict-frame:#00f3ff;--verdict-label:#67e8f9cc;
+  --verdict-winner:#67e8f9;--verdict-text:#cbd5e1;--verdict-badge-bg:#083344cc;--verdict-badge-text:#22d3ee;
+  --verdict-badge-border:#06b6d466;--verdict-track:#1e293b;--verdict-fill:linear-gradient(90deg,#efa957,#00f3ff);
+  --verdict-shadow:inset 0 0 32px #06b6d40a,0 0 24px #06b6d412;
+}
+.command-center>.executive{position:relative;background:var(--verdict-bg);border:1px solid var(--verdict-border);box-shadow:var(--verdict-shadow);scroll-margin-top:16px}
+html:not(.dark) .command-center>.executive:hover,html:not(.dark) .command-center>.executive:focus-within{border-color:var(--verdict-border);box-shadow:var(--verdict-shadow)}
+.verdict-corners{position:absolute;inset:6px;pointer-events:none;z-index:2;color:var(--verdict-frame)}
+.verdict-corners span{position:absolute;width:12px;height:12px;border:2px solid currentColor}
+.verdict-corners span:nth-child(1){top:0;left:0;border-right:0;border-bottom:0}
+.verdict-corners span:nth-child(2){top:0;right:0;border-left:0;border-bottom:0}
+.verdict-corners span:nth-child(3){bottom:0;left:0;border-right:0;border-top:0}
+.verdict-corners span:nth-child(4){bottom:0;right:0;border-left:0;border-top:0}
+.command-center .executive .panel-heading{min-height:58px;padding:18px 24px 14px;background:transparent;border-bottom:1px solid color-mix(in srgb,var(--verdict-border) 22%,transparent);flex-wrap:wrap;gap:10px}
+.command-center .executive .panel-heading:before{display:none}
+.command-center .executive .panel-heading h2{font:700 12px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--verdict-label)}
+.command-center .executive .panel-no{color:var(--verdict-label)}
+.command-center .executive #directive-status{margin-left:auto;padding:4px 8px;background:var(--verdict-badge-bg);border:1px solid var(--verdict-badge-border);border-radius:3px;font:700 10px var(--mono);letter-spacing:.025em;color:var(--verdict-badge-text)}
+.command-center .executive .executive-body{padding:24px 24px 22px;gap:16px;align-items:flex-start}
+.command-center .executive .directive-icon{position:relative;display:grid;width:52px;height:52px;margin-top:4px;color:var(--verdict-border);background:color-mix(in srgb,var(--verdict-border) 7%,transparent);border:1px solid color-mix(in srgb,var(--verdict-border) 40%,transparent);animation:verdict-radar-pulse 3s ease-in-out infinite}
+.command-center .executive .directive-icon:after{content:'';position:absolute;inset:-5px;border:1px dashed var(--verdict-border);border-radius:50%;opacity:.5;animation:verdict-radar-spin 20s linear infinite}
+.command-center .executive .directive-icon svg{width:30px;height:30px;stroke-width:1.8}
+html.dark .command-center .executive .directive-icon{color:#22d3ee;filter:drop-shadow(0 0 7px #00f3ff33)}
+.command-center .executive .directive-copy{flex:1;min-width:0}
+.command-center .executive #recommendation-label{font:700 10px/1.7 var(--mono);letter-spacing:.12em;color:var(--verdict-label)}
+.command-center .executive #winner{font:900 clamp(30px,2.4vw,40px)/1.12 var(--mono);letter-spacing:-.045em;color:var(--verdict-winner);margin:10px 0 16px;overflow-wrap:anywhere}
+html.dark .command-center .executive #winner{text-shadow:0 0 12px #00f3ff66}
+html:not(.dark) .command-center .executive #winner{text-shadow:0 1px 2px #0f172a12}
+.command-center .executive #confidence{font:12px/1.75 var(--mono);color:var(--verdict-text)}
+.command-center .executive .directive-metrics{display:flex;flex-wrap:wrap;gap:16px 22px;margin-top:4px}
+.command-center .executive .directive-metrics[hidden]{display:none}
+.directive-metrics>div{display:flex;flex-direction:column;gap:6px}
+.directive-metrics span{font:9px/1.6 var(--mono);letter-spacing:.06em;color:var(--verdict-label)}
+.directive-metrics strong{font:600 12px/1.5 var(--mono);color:var(--verdict-text)}
+.directive-metrics #win-rate{font:800 24px/1 var(--mono);color:var(--verdict-winner)}
+.command-center .executive .regret{padding:0 24px 24px}
+.command-center .executive .regret>div:first-child{font:10px/1.6 var(--mono);color:var(--verdict-text);gap:6px 12px;flex-wrap:wrap}
+.command-center .executive #regret-value{font-weight:600;color:var(--verdict-text)}
+.command-center .executive .progress-track{margin-top:12px;height:8px;background:var(--verdict-track);border-radius:999px}
+.command-center .executive #regret-bar{background:var(--verdict-fill);border-radius:999px;box-shadow:0 0 10px color-mix(in srgb,var(--verdict-border) 40%,transparent)}
+.command-center .executive[data-state=processing]{animation:directive-processing 1s ease-in-out infinite}
+.command-center .executive[data-state=resolved]{animation:directive-flash .9s ease-out}
+@keyframes verdict-radar-spin{to{transform:rotate(360deg)}}
+@keyframes verdict-radar-pulse{50%{box-shadow:inset 0 0 15px color-mix(in srgb,var(--verdict-border) 12%,transparent),0 0 15px color-mix(in srgb,var(--verdict-border) 12%,transparent)}}
+@keyframes directive-processing{50%{box-shadow:inset 0 0 28px color-mix(in srgb,var(--verdict-border) 8%,transparent),0 0 16px color-mix(in srgb,var(--verdict-border) 18%,transparent)}}
+@keyframes directive-flash{0%{background:color-mix(in srgb,var(--verdict-bg) 85%,var(--verdict-border));box-shadow:0 0 30px color-mix(in srgb,var(--verdict-border) 35%,transparent)}100%{background:var(--verdict-bg);box-shadow:var(--verdict-shadow)}}
+
+/* Natural stacked heights on phones/tablets; no viewport lock. */
+@media(max-width:1023px){
+  .dashboard{display:flex;flex-direction:column;gap:16px}
+  .dashboard>.command-center{display:contents;height:auto}
+  .dashboard>.parameters,.dashboard>.analytics,.command-center>.executive,.command-center>.topology-panel{width:100%;grid-column:auto;grid-row:auto}
+  .command-center>.executive{order:0}
+  .dashboard>.parameters{order:1}
+  .command-center>.topology-panel{order:2;flex:none;min-height:520px}
+  .command-center>.topology-panel #topology{height:auto;min-height:300px}
+  .dashboard>.analytics{order:3}
+}
+@media(max-width:640px){
+  .command-center .executive .panel-heading{padding:18px 20px 14px}
+  .command-center .executive .executive-body{padding:22px 20px 20px;gap:14px}
+  .command-center .executive .directive-icon{width:40px;height:40px}
+  .command-center .executive .directive-icon svg{width:24px;height:24px}
+  .command-center .executive #winner{font-size:30px}
+  .command-center .executive .regret{padding:0 20px 22px}
+}
+@media(prefers-reduced-motion:reduce){.command-center .executive,.command-center .directive-icon,.command-center .directive-icon:after{animation:none!important}}

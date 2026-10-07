@@ -1,2 +1,4 @@
 @import "tailwindcss";
+/* Tailwind 4 equivalent of darkMode: 'class'; never use the media variant. */
+@custom-variant dark (&:where(.dark, .dark *));
 @source "./dist/index.html";

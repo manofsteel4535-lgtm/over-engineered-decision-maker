@@ -1,0 +1,57 @@
+/* Suite navigation uses explicit spectrum tokens rather than inverted colors. */
+:root{
+  --nav-bg:#f8fafc;--nav-border:#cbd5e1;--nav-text:#475569;--nav-hover:#e0f2feb3;
+  --nav-active-bg:#bae6fd;--nav-active-text:#082f49;--nav-active-border:#0284c7;
+  --nav-led:#0284c7;--nav-shadow:0 2px 8px #0284c712;
+  --calibration-bg:#ffffff;--calibration-grid:#0891b20a;--calibration-border:#0891b24d;
+}
+html.dark{
+  --nav-bg:#0a0e17;--nav-border:#1e293bcc;--nav-text:#94a3b8;--nav-hover:#0f172a99;
+  --nav-active-bg:#083344cc;--nav-active-text:#67e8f9;--nav-active-border:#06b6d4cc;
+  --nav-led:#22d3ee;--nav-shadow:0 0 10px #06b6d44d;
+  --calibration-bg:#020617cc;--calibration-grid:#06b6d40a;--calibration-border:#06b6d44d;
+}
+.topbar{gap:16px;min-height:69px;height:auto;padding:12px 0}
+.brand{flex-shrink:0}.brand-sub{font-size:10px;letter-spacing:.06em}.brand-divider{margin:0 10px}
+.module-navigation{padding:16px 0;border-bottom:1px solid var(--line)}
+.module-tabs{position:relative;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:4px 2px 8px;max-width:100%}
+.module-tabs::-webkit-scrollbar{display:none}
+.module-tab{display:flex;align-items:center;justify-content:center;gap:8px;flex:1 0 auto;white-space:nowrap;min-height:42px;padding:11px 9px;background:var(--nav-bg);border:1px solid var(--nav-border);border-radius:4px;color:var(--nav-text);font:700 12px/1.4 var(--mono);letter-spacing:.045em}
+.module-tab:focus-visible{outline-offset:2px}
+.module-tab:hover{background:var(--nav-hover);color:var(--nav-active-text);border-color:var(--accent-border)}
+:is(html[data-active-module="MATRIX"] [data-module="MATRIX"],html[data-active-module="FIGHTER"] [data-module="FIGHTER"],html[data-active-module="TRIAL"] [data-module="TRIAL"],html[data-active-module="ARCHIVES"] [data-module="ARCHIVES"]){background:var(--nav-active-bg);border-color:var(--nav-active-border);color:var(--nav-active-text);box-shadow:var(--nav-shadow);font-weight:800}
+.module-led{width:5px;height:5px;flex:none;border-radius:50%;background:currentColor;opacity:.35}
+:is(html[data-active-module="MATRIX"] [data-module="MATRIX"],html[data-active-module="FIGHTER"] [data-module="FIGHTER"],html[data-active-module="TRIAL"] [data-module="TRIAL"],html[data-active-module="ARCHIVES"] [data-module="ARCHIVES"]) .module-led{background:var(--nav-led);opacity:1;box-shadow:0 0 0 3px color-mix(in srgb,var(--nav-led) 13%,transparent),0 0 8px var(--nav-led);animation:module-led-pulse 2.5s ease-in-out infinite}
+/* Neutral panel markup has no hardcoded visibility; the pre-paint root selection
+   chooses exactly one layout before deferred app code sets hidden attributes. */
+html[data-active-module] :is(#matrix-view,#fighter-view,#trial-view,#archives-view){display:none!important}
+:is(html[data-active-module="MATRIX"] #matrix-view,html[data-active-module="FIGHTER"] #fighter-view,html[data-active-module="TRIAL"] #trial-view,html[data-active-module="ARCHIVES"] #archives-view){display:block!important}
+/* Reveal initialized content without animating a default-to-restored state. */
+html.preload *,html.preload *::before,html.preload *::after{transition:none!important;scroll-behavior:auto!important}
+html.preload:not(.app-ready) main{visibility:hidden}
+/* Hidden panels must override any utility display classes without unmounting. */
+#matrix-view[hidden],#standby-view[hidden]{display:none}
+.standby-view{padding:44px 0 48px}
+.calibration-heading{display:flex;align-items:center;gap:12px;margin-bottom:32px;color:var(--cyan);font:700 10px/1.7 var(--mono);letter-spacing:.09em}
+.calibration-heading:after{content:'';height:1px;flex:1;background:var(--line)}
+.calibration-card{position:relative;margin:0 auto;max-width:720px;padding:48px 36px 34px;text-align:center;border:1px solid var(--calibration-border);border-radius:8px;background-color:var(--calibration-bg);background-image:linear-gradient(var(--calibration-grid) 1px,transparent 1px),linear-gradient(90deg,var(--calibration-grid) 1px,transparent 1px);background-size:24px 24px;box-shadow:var(--panel-shadow)}
+.calibration-card:before,.calibration-card:after{content:'+';position:absolute;top:12px;color:var(--cyan);font:18px var(--mono)}
+.calibration-card:before{left:16px}.calibration-card:after{right:16px}
+.calibration-radar{position:relative;display:grid;place-items:center;width:112px;height:112px;margin:0 auto 36px;border:1px solid var(--accent-border);border-radius:50%;color:var(--cyan);background:radial-gradient(circle,color-mix(in srgb,var(--cyan) 9%,transparent),transparent 70%);box-shadow:inset 0 0 22px color-mix(in srgb,var(--cyan) 7%,transparent),0 0 28px color-mix(in srgb,var(--cyan) 8%,transparent)}
+.calibration-radar:before{content:'';position:absolute;inset:-9px;border:1px dashed var(--accent-border);border-radius:50%;animation:calibration-spin 24s linear infinite}
+.calibration-radar:after{content:'';position:absolute;inset:12px;border:2px solid transparent;border-top-color:var(--cyan);border-radius:50%;animation:calibration-spin 7s linear infinite}
+.calibration-radar svg{width:48px;height:48px;stroke-width:1;animation:module-led-pulse 3s ease-in-out infinite}
+.calibration-breadcrumb{font:700 11px var(--mono);color:var(--cyan);letter-spacing:.2em;margin-bottom:14px}
+.calibration-card h1{font:800 clamp(24px,2.8vw,34px)/1.3 var(--mono);text-transform:uppercase;letter-spacing:-.04em;overflow-wrap:anywhere}
+.calibration-copy{margin:24px auto 28px;max-width:580px;font:12px/1.9 var(--mono);color:var(--muted)}
+.calibration-copy strong{display:block;color:var(--text);font-weight:700;margin-bottom:8px}
+.calibration-telemetry{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 12px;padding:14px 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font:9px/1.7 var(--mono);color:var(--muted)}
+.calibration-telemetry b{color:var(--text);font-weight:600}.calibration-telemetry .offline{color:var(--amber)}
+.return-matrix{display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-top:28px;padding:14px 18px;border-radius:4px;border:1px solid var(--accent-border);background:var(--cyan);color:var(--button-text);font:700 11px/1.6 var(--mono);letter-spacing:.02em;box-shadow:0 0 18px color-mix(in srgb,var(--cyan) 15%,transparent)}
+.return-matrix:hover{background:var(--button-hover);box-shadow:0 0 24px color-mix(in srgb,var(--cyan) 25%,transparent)}
+.calibration-footnote{margin:22px 0 0;color:var(--muted-soft);font:9px/1.7 var(--mono);letter-spacing:.08em}
+@keyframes module-led-pulse{50%{opacity:.55}}
+@keyframes calibration-spin{to{transform:rotate(360deg)}}
+@media(max-width:1199px){.brand-sub{max-width:210px;display:inline-block;vertical-align:middle;line-height:1.6}.module-tab{font-size:10px}}
+@media(max-width:640px){.brand-sub{display:none}.module-navigation{padding:12px 0}.module-tab{flex:none;padding:11px 13px}.standby-view{padding:28px 0}.calibration-heading{font-size:9px;margin-bottom:24px}.calibration-card{padding:36px 20px 26px}.calibration-card h1{font-size:24px}.calibration-radar{width:96px;height:96px}.calibration-copy{font-size:11px}.return-matrix{width:100%;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.module-led,.calibration-radar:before,.calibration-radar:after,.calibration-radar svg{animation:none!important}}

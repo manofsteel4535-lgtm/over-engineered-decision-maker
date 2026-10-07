@@ -1,0 +1,16 @@
+/* Input faults use their own hazard spectrum in both optical modes. */
+:root{--alert-bg:#fffbeb;--alert-border:#d97706;--alert-accent:#b45309;--alert-text:#0f172a;--alert-secondary:#334155;--alert-stripe:#fef3c7;--alert-button:#d97706;--alert-button-text:#0f172a}
+html.dark{--alert-bg:#020617e6;--alert-border:#f59e0b99;--alert-accent:#fbbf24;--alert-text:#e2e8f0;--alert-secondary:#cbd5e1;--alert-stripe:#f59e0b14;--alert-button:#fbbf24;--alert-button-text:#020617}
+.validation-dialog{background:var(--alert-bg);border-color:var(--alert-border);color:var(--alert-text);box-shadow:0 0 50px color-mix(in srgb,var(--alert-border) 15%,transparent)}
+.validation-dialog::backdrop{background:#02061799;backdrop-filter:blur(12px)}
+.validation-dialog .alert-stripe{display:flex;align-items:center;gap:10px;background:var(--alert-stripe);border-color:var(--alert-border);color:var(--alert-accent);font:600 10px/1.7 var(--mono);letter-spacing:.04em}
+.validation-dialog .alert-stripe svg{flex:none;width:18px;height:18px;animation:warning-pulse 1.5s ease-in-out infinite}
+.validation-dialog .alert-body>svg{color:var(--alert-accent);animation:warning-pulse 1.5s ease-in-out infinite}
+.validation-dialog .alert-body .amber{color:var(--alert-accent)!important}
+.validation-dialog .alert-body h2{color:var(--alert-text);font-size:29px;font-weight:700}
+.validation-dialog .alert-body p{color:var(--alert-secondary);font-size:13px;line-height:1.8}
+.validation-dialog .alert-dismiss{background:var(--alert-button);border-color:var(--alert-border);color:var(--alert-button-text);box-shadow:0 0 18px color-mix(in srgb,var(--alert-border) 18%,transparent);font:700 12px var(--mono)}
+.validation-dialog .alert-dismiss:hover{background:color-mix(in srgb,var(--alert-button) 88%,var(--alert-bg));box-shadow:0 0 24px color-mix(in srgb,var(--alert-border) 30%,transparent)}
+.validation-dialog .alert-footnote{color:var(--alert-secondary)}
+@keyframes warning-pulse{50%{opacity:.5;filter:drop-shadow(0 0 5px var(--alert-accent))}}
+@media(prefers-reduced-motion:reduce){.validation-dialog .alert-stripe svg,.validation-dialog .alert-body>svg{animation:none}}

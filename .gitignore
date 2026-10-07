@@ -1,3 +1,23 @@
 node_modules/
 .sites-runtime/
+.openai/
+
+# dist/ is this buildless app's source and vendored runtime: keep it tracked.
+# Ignore only disposable build outputs.
+build/
+.next/
+out/
+coverage/
+
+# Local configuration and editor/OS artifacts.
+.env
+.env.*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and generated upload bundles.
+*.log
+npm-debug.log*
 *.tar.gz

@@ -3,11 +3,22 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0e17">
+  <script src="./theme.js"></script>
+  <script src="./navigation-preference.js"></script>
   <meta name="description" content="10,000 simulations. Four existential variables. One unnecessarily serious decision. A mission-control dashboard for your everyday choices.">
   <title>The Over-Engineered Decision Maker</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0e17'/%3E%3Cpath d='M16 5v9M16 14L6 25M16 14l10 11' stroke='%235ae6dc' stroke-width='2'/%3E%3Cg fill='%235ae6dc'%3E%3Ccircle cx='16' cy='6' r='3'/%3E%3Ccircle cx='6' cy='25' r='3'/%3E%3Ccircle cx='26' cy='25' r='3'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="stylesheet" href="./tailwind.css">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./clinical.css">
+  <link rel="stylesheet" href="./layout.css">
+  <link rel="stylesheet" href="./alerts.css">
+  <link rel="stylesheet" href="./navigation.css">
+  <link rel="stylesheet" href="./trial.css">
+  <link rel="stylesheet" href="./fighter.css">
+  <link rel="stylesheet" href="./header-clock.css">
+  <link rel="stylesheet" href="./archives.css">
+  <link rel="stylesheet" href="./module-header.css">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
   <script src="./vendor/chart.umd.js" defer></script>
   <script src="./vendor/lucide.min.js" defer></script>
@@ -16,31 +27,64 @@
 <body>
   <div class="app-shell">
     <header class="topbar flex items-center justify-between">
-      <div class="brand flex items-center gap-3"><span class="brand-icon"><i data-lucide="git-fork"></i></span><span>ODDM<span class="brand-divider">/</span><span class="brand-sub">DECISION SYSTEMS</span></span></div>
-      <div class="top-meta flex items-center gap-6"><span><span class="status-dot"></span> ALL SYSTEMS NOMINAL</span><span id="clock">--:--:-- UTC</span><span class="version">V. 4.0.2</span></div>
-    </header>
-    <main>
-      <div class="page-heading flex items-center justify-between gap-5">
-        <div><div class="eyebrow">ORDINARY CHOICES. EXTRAORDINARY COMPUTATION.</div><h1>The Over-Engineered<br class="mobile-break"> Decision Maker<span class="title-dot">.</span></h1><p>Because “just pick one” is not an acceptable methodology.</p></div>
-        <div class="mission-id"><span class="micro">ACTIVE MISSION</span><strong id="mission-id">DEC-0001</strong><span class="micro">PRIORITY: UNNECESSARILY HIGH</span></div>
+      <div class="brand flex items-center gap-3"><span class="brand-icon"><i data-lucide="git-fork"></i></span><span>ODDM<span class="brand-divider">//</span><span class="brand-sub">OVER-ENGINEERED LIFE SYSTEMS SUITE</span></span></div>
+      <div class="header-controls flex items-center gap-6">
+        <div class="top-meta flex items-center gap-6"><span><span class="status-dot"></span> ALL SYSTEMS NOMINAL</span><span id="clock"><span id="clock-digits" class="timestamp-digits">--:--:--</span><button type="button" id="timezone-badge" class="tz-badge" aria-label="Time zone: UTC. Click to switch to IST">UTC</button></span><span class="version">V. 4.0.2</span></div>
+        <button type="button" id="theme-toggle" class="theme-toggle transition-colors duration-300" aria-label="Optical Mode: switch theme" aria-pressed="false">
+          <span id="theme-icon" class="text-[#d97706] dark:text-[#6d28d9]" aria-hidden="true"><svg class="optical-icon optical-icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="optical-icon optical-icon-moon" viewBox="0 0 24 24"><path d="M20.99 12.9A9 9 0 1 1 11.1 3.01a7 7 0 0 0 9.89 9.89Z"/></svg></span><span class="theme-toggle-copy"><span>OPTICAL MODE</span><strong id="theme-name"><span class="optical-label-dark">[DEEP SPACE]</span><span class="optical-label-light">[SOLAR DIAGNOSTIC]</span></strong></span><span class="optical-switch" aria-hidden="true"></span>
+        </button>
       </div>
+    </header>
+    <nav class="module-navigation" aria-label="Life systems modules">
+      <div class="module-tabs" role="tablist" aria-label="ODDM suite modules">
+        <button class="module-tab" id="module-matrix" type="button" role="tab" data-module="MATRIX" aria-selected="false" aria-controls="matrix-view" tabindex="-1"><span class="module-led" aria-hidden="true"></span>[01 // QUANTUM MATRIX]</button>
+        <button class="module-tab" id="module-fighter" type="button" role="tab" data-module="FIGHTER" aria-selected="false" aria-controls="fighter-view" tabindex="-1"><span class="module-led" aria-hidden="true"></span>[02 // OPTION FIGHTER]</button>
+        <button class="module-tab" id="module-trial" type="button" role="tab" data-module="TRIAL" aria-selected="false" aria-controls="trial-view" tabindex="-1"><span class="module-led" aria-hidden="true"></span>[03 // QUANTUM TRIAL]</button>
+        <button class="module-tab" id="module-archives" type="button" role="tab" data-module="ARCHIVES" aria-selected="false" aria-controls="archives-view" tabindex="-1"><span class="module-led" aria-hidden="true"></span>[04 // BLACK BOX ARCHIVES]</button>
+      </div>
+      <span class="sr-only" id="active-module-announcement" aria-live="polite" aria-atomic="true"></span>
+    </nav>
+    <script src="./navigation-boot.js"></script>
+    <main>
+      <div id="matrix-view" role="tabpanel" aria-labelledby="module-matrix" tabindex="0">
+      <header class="module-header">
+        <div class="module-header-copy"><div class="module-header-meta">MODULE 01 // QUANTUM MATRIX</div><h1 class="module-header-title">The Over-Engineered Decision Maker<span class="title-dot">.</span></h1><p class="module-header-description">Because “just pick one” is not an acceptable methodology.</p></div>
+        <div class="mission-id"><span class="micro">MISSION QUEUE</span><strong id="mission-id">DEC-0000</strong><span class="micro">PRIORITY: UNNECESSARILY HIGH</span></div>
+      </header>
+      <p id="matrix-directive-source" class="matrix-directive-source" hidden></p>
       <div class="system-strip grid grid-cols-2 md:grid-cols-4">
         <div><i data-lucide="cpu"></i><span>ENGINE STATUS<strong id="engine-status">STANDBY</strong></span><span class="strip-end cyan">●</span></div>
         <div><i data-lucide="layers"></i><span>SCENARIOS PER RUN<strong>10,000<span class="unit"> iterations</span></strong></span></div>
         <div><i data-lucide="activity"></i><span>DECISION COMPLEXITY<strong id="complexity">ABSURD<span class="unit"> / 42×</span></strong></span></div>
-        <div><i data-lucide="shield-alert"></i><span>EXISTENTIAL THREAT<strong class="amber" id="threat-level">ELEVATED</strong></span></div>
+        <div><i data-lucide="shield-alert"></i><span>EXISTENTIAL THREAT<strong class="amber" id="threat-level">UNASSESSED</strong></span></div>
       </div>
-      <div class="dashboard">
-        <aside class="panel parameters">
+      <div class="dashboard grid grid-cols-12 gap-4">
+        <aside class="panel parameters col-span-12 lg:col-span-3">
           <div class="panel-heading"><h2><span class="panel-no">01</span> Mission parameters</h2><i data-lucide="sliders-horizontal"></i></div>
-          <form id="mission-form">
-            <div class="field"><label for="option-a"><span class="option-dot a"></span> OPTION A</label><input id="option-a" name="option-a" value="Tacos" maxlength="60" required autocomplete="off"></div>
+          <form id="mission-form" autocomplete="off" novalidate>
+            <div class="field"><label for="option-a"><span class="option-dot a"></span> OPTION A</label><input id="option-a" name="option-a" placeholder="Option A (e.g., Moza R5 Bundle, Taco, YSL Y)" title="Option A (e.g., Moza R5 Bundle, Taco, YSL Y)" maxlength="60" required autocomplete="off"></div>
             <div class="versus"><span></span>VS<span></span></div>
-            <div class="field"><label for="option-b"><span class="option-dot b"></span> OPTION B</label><input id="option-b" name="option-b" value="Salad" maxlength="60" required autocomplete="off"></div>
-            <div class="field context-field"><label for="context">CONTEXTUAL VARIABLE</label><select id="context"><option>Workplace Lunch</option><option>Late Night Craving</option><option>First Date</option></select></div>
+            <div class="field"><label for="option-b"><span class="option-dot b"></span> OPTION B</label><input id="option-b" name="option-b" placeholder="Option B (e.g., Fanatec CSL DD, Spaghetti, Louis Vuitton Imagination)" title="Option B (e.g., Fanatec CSL DD, Spaghetti, Louis Vuitton Imagination)" maxlength="60" required autocomplete="off"></div>
+            <div class="field context-field"><label for="context">CONTEXTUAL VARIABLE</label><select id="context">
+              <optgroup label="Food &amp; Dining">
+                <option value="workplace-lunch">Workplace Lunch Matrix</option><option value="late-night">Late Night Craving Emergency</option><option value="food-delivery">Food Delivery Partner Showdown</option><option value="dining-risk">Fine Dining vs. Street Food Risk</option>
+              </optgroup>
+              <optgroup label="Tech &amp; Hardware">
+                <option value="smartphone">Smartphone Ecosystem Pivot</option><option value="laptop">Laptop Brand Hegemony</option><option value="gpu">Desktop GPU Dilemma</option>
+              </optgroup>
+              <optgroup label="Sim Racing &amp; Gaming">
+                <option value="wheelbase">Direct Drive Wheelbase Clash</option><option value="game-backlog">Game Backlog Priority</option><option value="gaming-platform">Console vs. PC Master Race Paradigm</option>
+              </optgroup>
+              <optgroup label="Fragrance &amp; Personal Style">
+                <option value="daily-scent">Daily Scent Signature</option><option value="apparel">High Street Apparel vs. Designer Footwear</option>
+              </optgroup>
+              <optgroup label="Meta / Existential">
+                <option value="productivity">Productivity vs. Procrastination</option><option value="vacation-investment">Spontaneous Vacation vs. ETF Investment</option>
+              </optgroup>
+            </select></div>
             <div class="chaos-label flex items-center justify-between"><label for="chaos">CHAOS MULTIPLIER</label><output id="chaos-output" for="chaos">42<span> / 100</span></output></div>
             <input type="range" id="chaos" min="1" max="100" value="42"><div class="range-label flex justify-between"><span>Predictable</span><span>Apocalyptic</span></div>
-            <div class="chaos-warning"><i data-lucide="triangle-alert"></i><p id="chaos-description">Moderate chaos. Your lunch may alter the timeline.</p></div>
+            <div class="chaos-warning"><i data-lucide="triangle-alert"></i><p id="chaos-description">Moderate chaos. Your choice may alter the timeline.</p></div>
             <button id="run-button" type="submit" class="run-button"><i data-lucide="zap"></i><span>RUN QUANTUM<br>DECISION MATRIX</span></button>
             <div class="run-caption" id="run-caption">10,000 scenarios. Zero chill.</div>
             <div class="settings">
@@ -51,41 +95,157 @@
           </form>
           <div class="parameter-footer"><i data-lucide="lock-keyhole"></i> CLASSIFIED: EXTREMELY MUNDANE</div>
         </aside>
-        <section class="panel topology-panel">
-          <div class="panel-heading"><h2><span class="panel-no">02</span> 3D spatial topology</h2><span class="live-badge">LIVE MODEL</span></div>
-          <div class="topology-toolbar flex justify-between items-center"><span><span class="cyan">◈</span> USER CHOICE INSTANCE</span><div class="flex gap-2"><button id="rotate" class="icon-button" aria-label="Pause graph rotation" title="Pause rotation"><i data-lucide="pause"></i></button><button id="reset-view" class="icon-button" aria-label="Reset graph view" title="Reset view"><i data-lucide="scan"></i></button></div></div>
-          <div id="topology" role="img" aria-label="Interactive 3D graph of nutritional entropy, post-lunch lethargy, financial friction, and existential satisfaction. Drag to rotate; scroll to zoom."><div id="node-labels"></div><div id="node-tooltip" role="tooltip" hidden></div><div class="graph-crosshair tl"></div><div class="graph-crosshair tr"></div><div class="graph-crosshair bl"></div><div class="graph-crosshair br"></div><div class="graph-coordinates">X <span id="coordinate-x">+00.00</span><br>Y +01.20<br>Z +08.00</div></div>
-          <div class="graph-footer flex items-center justify-between"><span><i data-lucide="mouse-pointer-2"></i> DRAG TO ORBIT · SCROLL TO ZOOM</span><span>5 NODES <span class="separator">/</span> 4 VECTORS</span></div>
-          <div class="topology-metrics grid grid-cols-3"><div><span>ENTROPY INDEX</span><strong id="entropy">0.842<span> H</span></strong></div><div><span>COHERENCE</span><strong id="coherence">97.6<span> %</span></strong></div><div><span>REALITY INTEGRITY</span><strong class="cyan" id="integrity">STABLE</strong></div></div>
+        <div class="command-center col-span-12 lg:col-span-5 flex flex-col gap-4 h-full min-h-0">
+        <section class="panel executive flex-none" data-state="idle">
+          <div class="verdict-corners" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+          <div class="panel-heading"><h2><span class="panel-no">05</span> Executive directive</h2><span id="directive-status" class="micro">MATRIX IDLE</span></div>
+          <div class="executive-body">
+            <div class="directive-icon"><i data-lucide="crosshair"></i></div>
+            <div class="directive-copy">
+              <div class="micro" id="recommendation-label">AWAITING USER INPUT</div>
+              <h3 id="winner">MATRIX IDLE</h3>
+              <p id="confidence" aria-live="polite">Status: Awaiting Human Indecision. Enter two options to launch 10,000 wildly unnecessary calculations.</p>
+              <div id="directive-metrics" class="directive-metrics" aria-live="polite" hidden>
+                <div><span>SIMULATED WIN RATE</span><strong id="win-rate">—</strong></div>
+                <div><span>95% CONFIDENCE INTERVAL</span><strong id="win-interval">—</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="regret"><div class="flex justify-between"><span>POST-DECISION REGRET INDEX</span><strong id="regret-value">—</strong></div><div class="progress-track"><div id="regret-bar" role="progressbar" aria-label="Estimated post-decision regret" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div></div>
         </section>
-        <div class="analytics">
+        <section class="panel topology-panel flex-1 flex flex-col min-h-[420px]">
+          <div class="panel-heading"><h2><span class="panel-no">02</span> 3D spatial topology</h2><span class="live-badge" id="topology-status">STANDBY</span></div>
+          <div class="topology-toolbar flex justify-between items-center"><span><span class="cyan">◈</span> USER CHOICE INSTANCE</span><div class="flex gap-2"><button id="rotate" class="icon-button" aria-label="Pause graph rotation" title="Pause rotation"><i data-lucide="pause"></i></button><button id="reset-view" class="icon-button" aria-label="Reset graph view" title="Reset view"><i data-lucide="scan"></i></button></div></div>
+          <div id="topology" class="flex-1 w-full h-full min-h-0 relative" role="img" aria-label="Ambient decision graph in standby. No simulation weights yet. Drag to rotate; scroll to zoom."><div id="node-labels"></div><div id="node-tooltip" role="tooltip" hidden></div><div class="graph-crosshair tl"></div><div class="graph-crosshair tr"></div><div class="graph-crosshair bl"></div><div class="graph-crosshair br"></div><div class="graph-coordinates">X <span id="coordinate-x">+00.00</span><br>Y +01.20<br>Z +08.00</div></div>
+          <div class="graph-footer flex items-center justify-between"><span><i data-lucide="mouse-pointer-2"></i> DRAG TO ORBIT · SCROLL TO ZOOM</span><span>5 NODES <span class="separator">/</span> 4 VECTORS</span></div>
+          <div class="topology-metrics grid grid-cols-3"><div><span>ENTROPY INDEX</span><strong id="entropy">—</strong></div><div><span>COHERENCE</span><strong id="coherence">—</strong></div><div><span>REALITY INTEGRITY</span><strong class="cyan" id="integrity">STANDBY</strong></div></div>
+        </section>
+        </div>
+        <div class="analytics col-span-12 lg:col-span-4">
           <section class="panel probability-panel">
             <div class="panel-heading"><h2><span class="panel-no">03</span> Monte Carlo engine</h2><i data-lucide="chart-no-axes-combined"></i></div>
-            <div class="chart-topline flex items-center justify-between"><span>OUTCOME DISTRIBUTION</span><div class="legend"><span><b class="a"></b><span id="legend-a">Tacos</span></span><span><b class="b"></b><span id="legend-b">Salad</span></span></div></div>
-            <div class="chart-wrap"><canvas id="probability-chart" role="img" aria-label="Comparison of simulated utility distributions for both options"></canvas></div>
+            <div class="chart-topline flex items-center justify-between"><span>OUTCOME DISTRIBUTION</span><div class="legend"><span><b class="a"></b><span id="legend-a">Option A</span></span><span><b class="b"></b><span id="legend-b">Option B</span></span></div></div>
+            <div class="chart-wrap"><canvas id="probability-chart" role="img" aria-label="Probability engine in standby. No outcomes calculated."></canvas><div id="chart-standby" class="chart-standby">STANDBY / NO OUTCOMES</div></div>
             <div class="distribution-footer"><span>UTILITY SCORE →</span><span id="sample-status">AWAITING SIMULATION</span></div>
             <div class="probability-stats grid grid-cols-3"><div><span>MEAN <b class="cyan">A</b> / <b class="amber">B</b></span><strong id="means">— / —</strong></div><div><span>STD. DEVIATION</span><strong id="deviations">— / —</strong></div><div><span>TAIL RISK &lt; 25</span><strong id="tails">— / —</strong></div></div>
           </section>
           <section class="panel risk-panel">
-            <div class="panel-heading"><h2><span class="panel-no">04</span> Weighted risk matrix</h2><span class="risk-badge" id="risk-count">5 POTENTIAL THREATS</span></div>
+            <div class="panel-heading"><h2><span class="panel-no">04</span> Weighted risk matrix</h2><span class="risk-badge" id="risk-count">AWAITING SCENARIOS</span></div>
             <div class="risk-content"><div class="risk-y-label">CONSEQUENCE SEVERITY</div><div class="risk-y-ticks"><span>Devastating</span><span>Inconvenient</span><span>Mild</span></div><div class="heatmap" id="heatmap"><div class="heat-cells" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div id="risk-points"></div></div><div class="risk-x-ticks"><span>Low</span><span>Moderate</span><span>High</span></div><div class="risk-x-label">LIKELIHOOD OF ABSOLUTE NONSENSE</div></div>
             <div class="risk-bottom"><span><i data-lucide="info"></i> Hover or tap a threat to inspect</span><span class="heat-legend">LOW <b></b> HIGH</span></div>
-            <div id="risk-detail" class="risk-detail" aria-live="polite">Salsa stains are a non-zero possibility.</div>
+            <div id="risk-detail" class="risk-detail" aria-live="polite">Sufficient drama requires two options first.</div>
           </section>
-        </div>
-        <section class="panel executive">
-          <div class="panel-heading"><h2><span class="panel-no">05</span> Executive directive</h2><span id="directive-status" class="micro">AWAITING ORDERS</span></div>
-          <div class="executive-body"><div class="directive-icon"><i data-lucide="crosshair"></i></div><div class="directive-copy"><div class="micro cyan" id="recommendation-label">RECOMMENDED ACTION</div><h3 id="winner">The fate of lunch<br>is in your hands.</h3><p id="confidence" aria-live="polite">Initialize the matrix to receive your directive.</p></div></div>
-          <div class="regret"><div class="flex justify-between"><span>POST-DECISION REGRET INDEX</span><strong id="regret-value">—</strong></div><div class="progress-track"><div id="regret-bar"></div></div></div>
-        </section>
         <section class="panel telemetry">
           <div class="panel-heading"><h2><span class="panel-no">06</span> Telemetry log</h2><span class="micro"><span class="status-dot"></span> CONSOLE ACTIVE</span></div>
           <div id="logs" role="log" aria-label="Simulation telemetry" aria-live="polite" aria-relevant="additions"></div>
-          <div class="console-bottom"><span class="prompt-symbol">›</span><span id="console-state">Awaiting your wildly consequential input<span class="cursor">_</span></span><span class="micro" id="log-count">03 EVENTS</span></div>
+          <div class="console-bottom"><span class="prompt-symbol">›</span><span id="console-state">Awaiting your wildly consequential input<span class="cursor">_</span></span><span class="micro" id="log-count">00 EVENTS</span></div>
         </section>
+        </div>
       </div>
+      </div>
+      <section id="trial-view" class="trial-view" role="tabpanel" aria-labelledby="module-trial" tabindex="0">
+        <header class="module-header">
+          <div class="module-header-copy"><div class="module-header-meta">MODULE 03 // SUPREME QUANTUM TRIBUNAL</div><h1 class="module-header-title">Quantum Trial<span class="cyan">.</span></h1><p class="module-header-description">AI Kangaroo Court / Trial of Human Judgment</p></div>
+          <div class="mission-id"><span class="micro">CASE FILE</span><strong id="trial-case-id">QTR-NEW</strong><span class="micro" id="trial-status">AWAITING CONFESSION</span></div>
+        </header>
+        <ol class="trial-stepper" aria-label="Tribunal stages">
+          <li id="trial-step-1" data-state="current" aria-current="step"><span>01</span><div><strong>INDICTMENT</strong><small>Review dossier. Select charge.</small></div><i data-lucide="file-warning"></i></li>
+          <li id="trial-step-2" data-state="pending"><span>02</span><div><strong>CROSS-EXAMINATION</strong><small>Three questions. Zero dignity.</small></div><i data-lucide="messages-square"></i></li>
+          <li id="trial-step-3" data-state="pending"><span>03</span><div><strong>JUDICIAL DECREE</strong><small>Objectivity sold separately.</small></div><i data-lucide="gavel"></i></li>
+        </ol>
+        <div class="trial-system-line"><span>DUE PROCESS: OPTIONAL // JURISDICTION: QUESTIONABLE</span><div class="trial-toolbar"><label><input id="trial-mute" type="checkbox" role="switch"> Mute court audio</label><label><input id="trial-reveal-predictions" type="checkbox" autocomplete="off"> REVEAL JURY PREDICTIONS</label></div></div>
+        <div id="trial-phase-1" class="trial-indictment-grid">
+          <section class="panel court-entry">
+            <div class="panel-heading"><h2><span class="panel-no">T1</span> Indictment &amp; evidence</h2><span class="court-badge">CASE INITIALIZATION</span></div>
+            <form id="trial-form" autocomplete="off" novalidate>
+              <div class="court-micro-heading">[SUPREME QUANTUM TRIBUNAL // CASE INITIALIZATION]</div>
+              <div id="trial-choice-fields" class="trial-choice-fields" data-locked="true">
+                <div class="trial-choice-status"><i id="trial-choice-lock" data-lucide="lock-keyhole" hidden></i><span id="trial-choice-status">[READ ONLY // QUANTUM MATRIX INPUT LINK]</span></div>
+                <div class="trial-choice-grid"><div class="field"><label id="trial-option-a-label" for="trial-option-a">OPTION A</label><input id="trial-option-a" readonly maxlength="60" autocomplete="off" placeholder="Option A" aria-describedby="trial-choice-status"></div><div class="field"><label id="trial-option-b-label" for="trial-option-b">OPTION B</label><input id="trial-option-b" readonly maxlength="60" autocomplete="off" placeholder="Option B" aria-describedby="trial-choice-status"></div></div>
+              </div>
+              <div class="field">
+                <div class="trial-dossier-heading"><span id="trial-dossier-label">ALLEGED DECISION / ACTION UNDERTAKEN</span><span class="trial-dossier-lock"><i data-lucide="lock-keyhole"></i>READ ONLY</span></div>
+                <div class="trial-dossier-container"><div id="trial-standard-dossier" class="trial-dossier" hidden>
+                  <div class="trial-dossier-toolbar"><span>AUTO-GENERATED INDICTMENT DOSSIER</span><button id="trial-reroll" type="button"><i data-lucide="shuffle"></i>[REROLL PHRASING]</button></div>
+                  <p id="trial-decision" role="textbox" aria-readonly="true" aria-multiline="true" aria-labelledby="trial-dossier-label" aria-describedby="trial-dossier-source" tabindex="0"></p>
+                  <div id="trial-dossier-source" class="trial-dossier-source"></div>
+                </div>
+                <div id="trial-state-error" class="court-state-error" role="alert" hidden><strong><i data-lucide="triangle-alert" aria-hidden="true"></i><span id="trial-state-code"></span></strong><p id="trial-state-message"></p><button id="trial-state-cta" type="button"></button></div></div>
+              </div>
+              <div class="field"><label for="trial-classification">CASE CLASSIFICATION</label><select id="trial-classification" required aria-describedby="trial-input-error trial-entry-status"><option value="" selected disabled>[SELECT LEGAL CHARGE / CASE CLASSIFICATION]</option></select><p id="trial-input-error" class="court-input-error" role="alert" hidden></p></div>
+              <button id="trial-surrender" class="court-primary" type="submit" disabled><i data-lucide="gavel"></i>SURRENDER TO THE TRIBUNAL</button>
+              <p id="trial-entry-status" class="court-caption" aria-live="polite">SELECT A LEGAL CHARGE TO AUTHORIZE PROSECUTION</p>
+            </form>
+          </section>
+          <aside class="panel court-jurisdiction"><div class="court-seal" aria-hidden="true"><i data-lucide="gavel"></i><span>SUPREME QUANTUM<br>TRIBUNAL</span></div><div class="court-micro-heading">THE PEOPLE VS. YOUR RECENT DECISION</div><h2>You have the right<br>to remain irrational.</h2><p>Choices are locked to Matrix inputs. Run the simulation on Tab 01, then review its winner and select a charge. Your appointed counsel has already forgotten your name.</p><div class="court-readiness"><div><strong>03</strong><span>SWORN RESPONSES</span></div><div><strong>01</strong><span>INEPT DEFENDER</span></div><div><strong>00</strong><span>FAIRNESS GUARANTEES</span></div></div></aside>
+        </div>
+        <div id="trial-case-banner" class="trial-case-banner" hidden><span>EXHIBIT A</span><strong id="trial-subject"></strong><span id="trial-class-label"></span></div>
+        <div id="trial-judges" class="trial-judges" hidden>
+          <article class="panel judicial-card prosecutor-card"><div class="judicial-role">PROSECUTION NODE // 01<span class="court-led"></span></div><div class="judicial-identity"><div class="judicial-avatar"><i data-lucide="scan-face"></i></div><div><h2>Prosecutor V.O.I.D.</h2><span class="court-caption">VINDICTIVE OBSERVATION &amp; INDICTMENT DAEMON</span></div></div><div class="judicial-status">STATUS: EAGER TO CONVICT</div></article>
+          <article class="panel judicial-card defender-card"><div class="judicial-role">PUBLIC DEFENSE NODE // 02<span class="court-led"></span></div><div class="judicial-identity"><div class="judicial-avatar"><i data-lucide="bot"></i></div><div><h2>Public Defender B.O.T.</h2><span class="court-caption">BARELY OPERATIONAL TESTIMONY</span></div></div><div class="judicial-status">STATUS: SWEATING DIGITAL OIL</div></article>
+          <article class="panel judicial-card jury-card"><div class="judicial-role">THE UNHINGED JURY NODE<span class="court-led"></span></div><div class="jury-metric"><strong id="trial-outrage">0%</strong><span id="trial-outrage-label">PASSIVE</span></div><div class="outrage-track"><div id="trial-outrage-bar" role="meter" aria-label="Public outrage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div><div class="outrage-axis"><span>0% [PASSIVE]</span><span>100% [RIOTS IN THE STREETS]</span></div></article>
+        </div>
+        <div id="trial-proceedings" class="trial-proceedings" hidden>
+          <div class="trial-main-column">
+            <section id="trial-phase-2" class="panel trial-question-panel" hidden><div class="panel-heading"><h2><span class="panel-no">T2</span> Cross-examination</h2><span id="trial-question-number" class="court-badge">QUESTION 01 / 03</span></div><div class="trial-question-body"><div class="court-micro-heading">PROSECUTOR V.O.I.D. REQUESTS YOUR TESTIMONY</div><h2 id="trial-question-text" tabindex="-1"></h2><div id="trial-answers" class="trial-answers" role="group" aria-labelledby="trial-question-text"></div><p id="trial-answer-status" class="court-caption" aria-live="polite"></p></div></section>
+            <section id="trial-phase-3" class="panel trial-decree" hidden><div class="verdict-corners" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="panel-heading"><h2><span class="panel-no">T3</span> Judicial decree</h2><span id="trial-decree-tier" class="court-badge">VERDICT SEALED</span></div><div class="trial-decree-body"><div class="decree-gavel"><i data-lucide="gavel"></i><span>FINAL TRIBUNAL DISPOSITION</span></div><div class="decree-outrage"><strong id="trial-final-outrage">0%</strong><span id="trial-final-label"></span></div><div class="outrage-track"><div id="trial-final-bar" role="meter" aria-label="Final public outrage" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div><h2 id="trial-verdict" tabindex="-1" aria-live="polite"></h2><div class="trial-sentence-box"><span>MANDATORY SENTENCE</span><p id="trial-sentence"></p><small id="trial-pardon-note" hidden>Even cosmic pardons incur administrative nonsense.</small></div><div class="trial-decree-actions"><button id="trial-appeal" class="court-secondary" type="button"><i data-lucide="rotate-ccw"></i>APPEAL VERDICT (RE-TRIAL)</button><button id="trial-archive" class="court-secondary" type="button">OPEN BLACK BOX ARCHIVES [04]</button><button id="trial-certificate" class="court-primary" type="button"><i data-lucide="file-badge"></i>GENERATE CERTIFICATE OF CONVICTION</button></div><p class="court-caption">THE COURT HAS SPOKEN. SENSIBLE ADULTS WERE UNAVAILABLE.</p></div></section>
+          </div>
+          <div class="trial-record-column"><section class="panel trial-transcript-panel"><div class="panel-heading"><h2><span class="panel-no">TX</span> Courtroom transcript</h2><span id="trial-transcript-count" class="micro">00 ENTRIES</span></div><div id="trial-transcript" role="log" aria-label="Live courtroom transcript" aria-live="polite" aria-relevant="additions"></div><div class="court-record-footer"><span class="status-dot"></span><span id="trial-transcript-state">RECORDING SWORN NONSENSE</span></div></section><section id="trial-evidence-panel" class="panel trial-evidence-panel" hidden><div class="panel-heading"><h2><span class="panel-no">EV</span> Sworn evidence chain</h2><span class="court-badge">3 / 3 FILED</span></div><ol id="trial-evidence-list"></ol></section></div>
+        </div>
+        <div id="trial-gavel-event" class="trial-gavel-event" aria-hidden="true"><i data-lucide="gavel"></i><span>ORDER IN THE SIMULATION</span></div>
+        <p class="court-footnote">SCRIPTED AI TRIBUNAL // Fictional jurisdiction. Real questionable judgment.</p>
+      </section>
+
+      <section id="fighter-view" class="fighter-view" role="tabpanel" aria-labelledby="module-fighter" tabindex="0">
+        <header class="module-header"><div class="module-header-copy"><div class="module-header-meta">MODULE 02 // ARCADE DECISION PROTOCOL</div><h1 class="module-header-title">Option Fighter <span class="fighter-title-ii">II</span><span class="cyan">.</span></h1><p class="module-header-description">Two options enter. One rational choice leaves.</p></div><div class="fighter-heading-tag"><i data-lucide="swords"></i><span>JUDGMENT THROUGH<br>CONTROLLED VIOLENCE</span></div></header>
+        <aside id="fighter-void-warning" class="fighter-void-warning" role="alert" hidden><i data-lucide="triangle-alert"></i><div><strong id="fighter-warning-header">[ERR 404: VOID COMBAT PROHIBITED]</strong><p id="fighter-warning-message">You cannot force two non-existent entities into gladiatorial combat. Return to [01 // QUANTUM MATRIX] and input two actual choices before staging a duel.</p><button id="fighter-warning-matrix" class="fighter-secondary" type="button">GO TO MATRIX [01] TO INPUT BOTH OPTIONS</button></div></aside>
+        <section class="panel fighter-setup"><div class="panel-heading"><h2><span class="panel-no">F1</span> Character assignment</h2><span id="fighter-setup-status" class="micro">AWAITING CHALLENGERS</span></div><form id="fighter-form" novalidate><div class="field fighter-field-a"><label for="fighter-name-a">OPTION A // CYBER-GLADIATOR</label><input id="fighter-name-a" maxlength="60" autocomplete="off" required placeholder="Fighter A (e.g., Moza R5)" aria-describedby="fighter-error"></div><div class="field fighter-field-b"><label for="fighter-name-b">OPTION B // NEO-RONIN</label><input id="fighter-name-b" maxlength="60" autocomplete="off" required placeholder="Fighter B (e.g., Fanatec DD)" aria-describedby="fighter-error"></div><div class="field"><label for="fighter-mode">COMBAT CONTROL MODE</label><select id="fighter-mode"><option value="ai">AUTONOMOUS AI VS AI</option><option value="player">PLAYER VS AI</option></select></div><button id="fighter-import" class="fighter-secondary" type="button"><i data-lucide="download"></i>LOAD MATRIX OPTIONS</button><button id="fighter-start" class="fighter-primary" type="submit"><i data-lucide="swords"></i>INITIATE COMBAT</button><p id="fighter-error" class="fighter-error" role="alert" hidden></p></form></section>
+        <section class="panel fighter-arena-panel">
+          <div class="fighter-arena-toolbar"><span><span class="status-dot"></span><span id="fighter-arena-title">NEON CITADEL // STAGE 01 // METROPOLIS VECTOR</span></span><div><span id="fighter-fps">— FPS</span><button id="fighter-pause" class="fighter-icon-button" type="button" aria-pressed="false" aria-label="Pause combat" disabled><i data-lucide="pause"></i><span>PAUSE [P]</span></button><label><input id="fighter-mute" type="checkbox"> Mute</label><label class="fighter-voice"><input id="fighter-voice" type="checkbox"> Announcer</label></div></div>
+          <div class="fighter-hud"><div class="combatant-hud hud-a"><div class="fighter-name-row"><span>01 // OPTION A</span><strong id="fighter-hud-a">CYBER-GLADIATOR</strong><span id="fighter-score-a" class="fighter-win-pips" role="img" aria-label="Option A: 0 round wins out of 3"><span class="round-pip" aria-hidden="true"></span><span class="round-pip" aria-hidden="true"></span><span class="round-pip" aria-hidden="true"></span></span></div><div class="fighter-integrity-label"><span>LOGIC INTEGRITY</span><strong id="fighter-hp-a">100 HP</strong></div><div class="fighter-health-track"><div id="fighter-health-a" role="meter" aria-label="Fighter A logic integrity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"></div></div><div class="fighter-meter-row"><span>OVERTHINK METER</span><div><div id="fighter-meter-a" role="meter" aria-label="Fighter A Overthink meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div><strong id="fighter-charge-a">0%</strong></div></div><div class="fighter-clock"><span id="fighter-round">ROUND 01</span><strong id="fighter-timer">60</strong><div><span id="fighter-series-score">0–0</span></div><span>SERIES // 03</span></div><div class="combatant-hud hud-b"><div class="fighter-name-row"><span>02 // OPTION B</span><strong id="fighter-hud-b">NEO-RONIN</strong><span id="fighter-score-b" class="fighter-win-pips" role="img" aria-label="Option B: 0 round wins out of 3"><span class="round-pip" aria-hidden="true"></span><span class="round-pip" aria-hidden="true"></span><span class="round-pip" aria-hidden="true"></span></span></div><div class="fighter-integrity-label"><span>LOGIC INTEGRITY</span><strong id="fighter-hp-b">100 HP</strong></div><div class="fighter-health-track"><div id="fighter-health-b" role="meter" aria-label="Fighter B logic integrity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"></div></div><div class="fighter-meter-row"><span>OVERTHINK METER</span><div><div id="fighter-meter-b" role="meter" aria-label="Fighter B Overthink meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div><strong id="fighter-charge-b">0%</strong></div></div></div>
+          <div id="fighter-stage" class="fighter-stage"><canvas id="fighter-canvas" tabindex="0" aria-label="Option Fighter arena in standby. Enter two challengers to begin."></canvas><div id="fighter-splash" class="fighter-splash" hidden><div class="fighter-portrait portrait-a"><i data-lucide="bot"></i><span>OPTION A // CYBER-GLADIATOR</span><strong id="fighter-vs-a"></strong></div><span class="fighter-vs">VS</span><div class="fighter-portrait portrait-b"><i data-lucide="scan-face"></i><span>OPTION B // NEO-RONIN</span><strong id="fighter-vs-b"></strong></div><p>TWO OPTIONS ENTER. ONE RATIONAL CHOICE LEAVES.</p></div><div id="fighter-stage-overlay" class="fighter-stage-overlay"><span id="fighter-stage-eyebrow">NEURAL DUEL SYSTEM // ONLINE</span><strong id="fighter-stage-callout">AWAITING COMBAT</strong><span id="fighter-stage-subtitle">Enter your choices. Outsource your judgment to plasma blades.</span><button id="fighter-proceed" type="button" class="fighter-primary" hidden>PROCEED TO QUANTUM TRIAL [03]</button></div><div id="fighter-combo" class="fighter-combo" hidden></div><div class="fighter-stage-corners" aria-hidden="true"><span>REC ● // NO SENSIBLE ADULTS PRESENT</span><span id="fighter-phase-label">STANDBY</span></div></div>
+          <div class="fighter-controls"><div class="fighter-controls-copy"><strong id="fighter-control-label">AI VS AI // FULL AUTONOMY</strong><span>W / ↑ JUMP · A D / ← → MOVE · S / ↓ CROUCH &amp; BLOCK · J/Z JAB · K/X SWEEP · L/C SUPER · P PAUSE</span></div><div class="fighter-touch-controls" aria-label="Player A combat controls"><button data-fighter-hold="left" type="button" aria-label="Move left">←</button><button data-fighter-action="jump" type="button" aria-label="Jump">↑</button><button data-fighter-hold="right" type="button" aria-label="Move right">→</button><button data-fighter-hold="block" type="button" aria-label="Crouch and block">↓</button><button data-fighter-action="light" type="button">JAB <kbd>J</kbd></button><button data-fighter-action="heavy" type="button">SWEEP <kbd>K</kbd></button><button data-fighter-action="special" id="fighter-super" type="button">SUPER <kbd>L</kbd></button></div></div>
+          <div class="fighter-arena-footer"><span id="fighter-live-status" role="status" aria-live="polite">STANDBY // Fighters require names before violence can be justified.</span><label><input id="fighter-hitboxes" type="checkbox"> Diagnostic hitboxes</label></div>
+        </section>
+        <section id="fighter-result" class="panel fighter-result" hidden aria-labelledby="fighter-result-title"><div class="panel-heading"><h2><span class="panel-no">F2</span> Post-fight telemetry</h2><span id="fighter-series-status" class="micro">ROUND SEALED</span></div><div class="fighter-result-body"><div class="fighter-victory"><span id="fighter-result-reason">K.O. // DECISION RESOLVED</span><h2 id="fighter-result-title" tabindex="-1"></h2><p id="fighter-victory-copy"></p></div><div class="fighter-result-metrics"><div><span id="fighter-integrity-metric">REMAINING INTEGRITY</span><strong id="fighter-result-health"></strong></div><div><span>MAXIMUM COMBO</span><strong id="fighter-result-combo"></strong></div><div><span>TOTAL DAMAGE A / B</span><strong id="fighter-result-damage"></strong></div><div><span>OVERTHINK VOLATILITY INDEX</span><strong id="fighter-result-volatility"></strong></div></div><ol id="fighter-round-history" class="fighter-round-history" aria-label="Completed tournament rounds"></ol><div class="fighter-result-actions"><button id="fighter-trial-result" type="button" class="fighter-primary">PROCEED TO QUANTUM TRIAL [03]</button><button id="fighter-apply" type="button" class="fighter-primary"><i data-lucide="arrow-up-right"></i>APPLY WINNER TO QUANTUM MATRIX</button><button id="fighter-rematch" type="button" class="fighter-secondary"><i data-lucide="rotate-ccw"></i>RESTART 3-ROUND SERIES</button><button id="fighter-new" type="button" class="fighter-secondary"><i data-lucide="users"></i>NEW CHALLENGERS</button></div><p id="fighter-result-note" class="fighter-result-note">Combat is fictional. Volatility is the standard deviation of signed meter changes. Timeout favors remaining integrity; equal health uses a random quantum tiebreak.</p></div></section>
+        <p class="fighter-footnote">VECTOR ARCADE ENGINE // 100 HP. 60 SECONDS. ZERO SCIENTIFIC JUSTIFICATION.</p>
+      </section>
+
+      <section id="archives-view" class="archives-view" role="tabpanel" aria-labelledby="module-archives">
+        <header class="module-header"><div class="module-header-copy"><div class="module-header-meta">MODULE 04 // FORENSIC REPOSITORY</div><h1 class="module-header-title">Black Box Archives.</h1><p class="module-header-description">Every decision leaves a paper trail. We have promoted yours to an unnecessarily official case file.</p></div><button id="archive-purge" class="archive-button archive-button-danger" type="button">PURGE ARCHIVE LOGS</button></header>
+        <div class="archive-summary"><div><span>CASE FILES LOGGED</span><strong id="archive-count">00</strong></div><div><span>FULL DOSSIERS</span><strong id="archive-full-count">00</strong></div><div><span>PARTIAL SIMULATIONS</span><strong id="archive-partial-count">00</strong></div><div><span>REPOSITORY STATUS</span><strong id="archive-storage" class="archive-storage-value">LOCAL LOG ONLINE</strong></div></div>
+        <p id="archive-storage-note" class="archive-storage-note" role="status" hidden></p>
+        <section class="archive-feed-panel" aria-labelledby="archive-feed-title"><div class="archive-feed-header"><strong id="archive-feed-title">A1 // ARCHIVE INDEX FEED</strong><span>NEWEST FIRST // EVIDENCE RETAINED</span></div>
+          <div id="archive-empty" class="archive-empty"><div class="archive-empty-symbol" aria-hidden="true">⌁</div><h2>No human indecision on file.</h2><p>A suspiciously pristine record. Run the Quantum Matrix to create your first case. Combat and courtroom evidence will be appended as proceedings conclude.</p><button id="archive-go-matrix" class="archive-button archive-button-primary" type="button">OPEN QUANTUM MATRIX [01]</button></div>
+          <div id="archive-table-wrap" class="archive-table-wrap" role="region" aria-label="Decision archive table" tabindex="0" hidden><table class="archive-table"><caption class="sr-only">Archived Matrix decisions and linked combat and trial status</caption><thead><tr><th scope="col">CASE FILE / TIMESTAMP</th><th scope="col">DECISION SUBJECTS</th><th scope="col">DECLARED WINNER</th><th scope="col">TRIAL / DOSSIER STATUS</th><th scope="col">INSPECT EVIDENCE</th></tr></thead><tbody id="archive-feed"></tbody></table></div>
+        </section>
+        <p class="archive-footnote">MATRIX → ARENA → TRIBUNAL → ARCHIVES // Missing stages remain explicitly marked. Historical files persist; live decisions start blank after reload.</p>
+      </section>
       <footer class="site-footer flex justify-between gap-4"><span><i data-lucide="orbit"></i> OVER-ENGINEERING DEPARTMENT <span class="separator">/</span> EST. FIVE MINUTES AGO</span><span>Simulated probabilities. Real indecision. <span class="cyan">No actual quantum computers were harmed.</span></span></footer>
     </main>
   </div>
+  <dialog id="validation-dialog" class="validation-dialog" aria-labelledby="validation-title" aria-describedby="validation-message">
+    <div class="alert-stripe"><i data-lucide="triangle-alert"></i><span id="validation-code">SYSTEM EXCEPTION / HUMAN INPUT FAULT</span></div>
+    <div class="alert-body"><i data-lucide="triangle-alert"></i><span class="micro amber">CALCULATION ABORTED</span>
+      <h2 id="validation-title">Decision matrix halted.</h2><p id="validation-message"></p>
+      <form method="dialog"><button id="validation-dismiss" class="alert-dismiss" autofocus>ACKNOWLEDGE &amp; RE-INPUT</button></form>
+      <span class="alert-footnote">No simulations were harmed. Or started.</span>
+    </div>
+  </dialog>
+  <dialog id="trial-certificate-dialog" class="trial-certificate-dialog" aria-labelledby="trial-cert-title">
+    <div class="trial-cert-toolbar"><span>QUANTUM TRIBUNAL // CERTIFIED CASE FILE</span><form method="dialog"><button id="trial-cert-close" type="submit" aria-label="Close trial certificate"><i data-lucide="x"></i></button></form></div>
+    <article id="trial-cert-card" class="trial-cert-card"><div class="trial-cert-kicker">ODDM // SUPREME QUANTUM TRIBUNAL // MODULE 03</div><h2 id="trial-cert-title">Certificate of Conviction</h2><div class="trial-cert-seal"><i data-lucide="gavel"></i><span id="trial-cert-seal">FICTIONAL JUDICIAL SEAL</span></div><div class="trial-cert-facts"><div><span>CASE IDENTIFIER</span><strong id="trial-cert-case"></strong></div><div><span>ISSUED AT (UTC)</span><strong id="trial-cert-issued"></strong></div><div><span>CASE CLASSIFICATION</span><strong id="trial-cert-class"></strong></div><div><span>PUBLIC OUTRAGE</span><strong id="trial-cert-outrage"></strong></div></div><div class="trial-cert-kicker">ALLEGED DECISION / ACTION</div><p id="trial-cert-decision" class="trial-cert-subject"></p><div id="trial-cert-verdict" class="trial-cert-verdict"></div><h3>SWORN CROSS-EXAMINATION RECORD</h3><ol id="trial-cert-answers"></ol><div class="trial-cert-sentence"><span>MANDATORY SENTENCE</span><p id="trial-cert-sentence"></p></div><p class="trial-cert-signature">AUTHORIZED BY V.O.I.D. // COUNTERSIGNED, RELUCTANTLY, BY B.O.T.</p><p class="court-caption">A satirical judgment with no legal force. Seal approved by three fictional judicial nodes.</p></article>
+    <div class="trial-cert-actions"><button id="trial-cert-print" class="court-primary" type="button"><i data-lucide="printer"></i>PRINT / SAVE AS PDF</button><a id="trial-cert-download" class="court-secondary" download><i data-lucide="download"></i>DOWNLOAD CERTIFICATE (.HTML)</a></div>
+    <p id="trial-cert-export-status" class="court-caption" role="status"></p>
+  </dialog>
+
+  <dialog id="archive-dossier-dialog" class="archive-dialog" aria-labelledby="archive-dossier-title">
+    <div class="archive-dialog-toolbar"><span>BLACK BOX // UNIFIED FORENSIC DOSSIER</span><form method="dialog"><button id="archive-close" type="submit" aria-label="Close dossier">×</button></form></div>
+    <article id="archive-report" class="archive-report"></article>
+    <div class="archive-dialog-actions"><button id="archive-print" class="archive-button archive-button-primary" type="button">PRINT DOSSIER / SAVE PDF</button><a id="archive-export" class="archive-button" download>EXPORT DOSSIER (.TXT)</a></div><p id="archive-export-status" class="archive-caption" role="status"></p>
+  </dialog>
+  <dialog id="archive-purge-dialog" class="archive-dialog archive-purge-dialog" aria-labelledby="archive-purge-title" aria-describedby="archive-purge-count">
+    <span class="archive-kicker">[ARCHIVE DESTRUCTION REQUEST]</span><h2 id="archive-purge-title">Purge the black box?</h2><p id="archive-purge-count"></p><p>The Department of Excessive Documentation cannot reconstruct purged evidence.</p><div class="archive-purge-actions"><form method="dialog"><button id="archive-purge-cancel" class="archive-button" autofocus>KEEP MY QUESTIONABLE LEGACY</button></form><button id="archive-purge-confirm" class="archive-button archive-button-danger" type="button">CONFIRM PURGE</button></div>
+  </dialog>
 </body>
 </html>

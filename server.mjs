@@ -10,7 +10,8 @@ http.createServer(async (req, res) => {
     const file = resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));
     if (!file.startsWith(root + sep)) { res.writeHead(403).end(); return; }
     const content = await readFile(file);
-    res.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream' });
+    // Local development should always display the latest edited assets.
+    res.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
     res.end(content);
   } catch { res.writeHead(404).end('Not found'); }
 }).listen(4173, '127.0.0.1', () => console.log('Local: http://127.0.0.1:4173'));

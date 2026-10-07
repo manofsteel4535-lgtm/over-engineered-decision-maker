@@ -1,0 +1,59 @@
+/* Solar Diagnostic / Clinical Tactical HUD. Dark layout inherits its original rules. */
+.b{background:var(--option-b)}
+#option-b{border-left-color:var(--option-b)}
+.probability-stats .amber{color:var(--option-b)!important}
+.risk-target{display:none}
+
+html:not(.dark) body{
+  background-image:linear-gradient(#cbd5e118 1px,transparent 1px),linear-gradient(90deg,#cbd5e118 1px,transparent 1px);
+  background-size:48px 48px;
+}
+html:not(.dark) h1{font-weight:700;letter-spacing:-.025em}
+html:not(.dark) .panel{position:relative}
+html:not(.dark) .panel:hover,html:not(.dark) .panel:focus-within{
+  border-color:var(--accent-border);box-shadow:var(--panel-shadow),0 0 0 1px #0891b20a;
+}
+html:not(.dark) .panel-heading{background:linear-gradient(90deg,#f8fafc,#ffffff);position:relative}
+html:not(.dark) .panel-heading:before{content:'';position:absolute;left:0;top:15px;width:2px;height:16px;background:var(--cyan)}
+html:not(.dark) .panel-heading h2{font-weight:700;color:var(--text)}
+html:not(.dark) .panel-no{color:var(--cyan)}
+html:not(.dark) .system-strip{background:#ffffff;box-shadow:var(--panel-shadow)}
+html:not(.dark) .system-strip svg{color:var(--cyan)}
+html:not(.dark) .system-strip strong{font-weight:600}
+html:not(.dark) .status-dot{
+  background:#06b6d4;box-shadow:0 0 0 3px #06b6d41a,0 0 10px #06b6d44d;
+  animation:clinical-status 3s ease-in-out infinite;
+}
+html:not(.dark) .field input:focus,html:not(.dark) .field select:focus{
+  border-color:var(--cyan);box-shadow:0 0 0 3px #0891b212;
+}
+html:not(.dark) .field input[aria-invalid=true]{border-color:var(--red)}
+html:not(.dark) .run-button{box-shadow:0 4px 12px #0891b21f;animation:none}
+html:not(.dark) .run-button svg{color:#ffffff;stroke-width:2;transition:transform .2s}
+html:not(.dark) .run-button:hover svg{transform:scale(1.12)}
+html:not(.dark) .node-label{color:#334155;border-bottom:2px solid var(--node-color);box-shadow:0 2px 8px #0f172a08}
+html:not(.dark) .node-label.center{color:var(--cyan);background:#ecfefff2;font-weight:600}
+html:not(.dark) .topology-metrics strong{font-weight:600}
+html:not(.dark) .chart-topline,html:not(.dark) .distribution-footer,
+html:not(.dark) .risk-y-label,html:not(.dark) .risk-x-label,
+html:not(.dark) .risk-y-ticks,html:not(.dark) .risk-x-ticks{color:#334155}
+html:not(.dark) .legend>span{color:#334155}
+html:not(.dark) .heat-cells{gap:1px;background:#ffffff}
+html:not(.dark) .risk-point{
+  width:26px;height:26px;border:0;border-radius:0;background:transparent;color:#1e293b;box-shadow:none;
+  filter:drop-shadow(0 1px 1px #ffffff);transition:transform .2s,color .2s;
+}
+html:not(.dark) .risk-number{display:none}
+html:not(.dark) .risk-target{display:block;width:22px;height:22px;stroke-width:1.5}
+html:not(.dark) .risk-point:hover,html:not(.dark) .risk-point:focus{
+  background:transparent;color:var(--cyan);transform:translate(-50%,50%) scale(1.18);
+}
+html:not(.dark) .risk-detail{background:#f8fafc;color:#334155}
+html:not(.dark) .directive-icon{background:#ecfeff;border-color:#0891b24d}
+html:not(.dark) .executive[data-state=idle] .directive-icon{animation:clinical-standby 3s ease-in-out infinite}
+html:not(.dark) .executive[data-state=idle] .directive-copy p{color:#0f172a;font-size:11px;line-height:1.8}
+html:not(.dark) .executive[data-state=idle] .directive-copy h3{font:600 22px/1.2 var(--mono)}
+html:not(.dark) .log-line.warn{color:#c2410c}
+@keyframes clinical-status{50%{box-shadow:0 0 0 4px #06b6d41a,0 0 12px #06b6d44d}}
+@keyframes clinical-standby{50%{box-shadow:inset 0 0 14px #06b6d426,0 0 0 4px #06b6d40a}}
+@media(prefers-reduced-motion:reduce){html:not(.dark) .status-dot,html:not(.dark) .executive[data-state=idle] .directive-icon{animation:none}}

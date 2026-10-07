@@ -22,6 +22,18 @@ export class MissionAudio {
     osc.connect(gain).connect(this.master);osc.start(t);osc.stop(t+duration+.03);
   }
   processing(){for(let i=0;i<12;i++)this.tone(120+i*45,160+i*60,.08,'sawtooth',i*.11,.07);}
+  // Short wooden crack over a low synth impact; each oscillator stops itself.
+  gavel(){this.tone(190,38,.28,'triangle',0,.7);this.tone(950,110,.09,'square',0,.14);this.tone(95,40,.22,'sawtooth',.035,.18);}
+  fightCue(type){
+    if(this.muted)return;
+    if(type==='hit')this.tone(190,60,.09,'triangle',0,.28);
+    if(type==='heavy'){this.tone(140,30,.18,'sawtooth',0,.32);this.tone(700,95,.06,'square',0,.08);}
+    if(type==='block')this.tone(900,580,.08,'sine',0,.16);
+    if(type==='special'){this.tone(110,920,.35,'sawtooth',0,.2);this.tone(70,40,.55,'triangle',.18,.4);}
+    if(type==='start')[330,440,660].forEach((f,i)=>this.tone(f,f,.13,'square',i*.13,.08));
+    if(type==='ko'){this.tone(130,25,.8,'sawtooth',0,.4);[440,330,220].forEach((f,i)=>this.tone(f,f,.2,'square',i*.2,.09));}
+  }
+  alarm(){[0,.18,.36].forEach(delay=>this.tone(340,180,.14,'square',delay,.12));}
   success(){this.tone(160,35,.7,'sawtooth',0,.3);[523.25,659.25,783.99,1046.5].forEach((f,i)=>this.tone(f,f,.5,'sine',.18+i*.1,.2));}
   suspend(){if(this.context)this.context.suspend();}
 }
